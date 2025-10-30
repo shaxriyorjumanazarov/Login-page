@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login / Sign Up</title>
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+  }
+
+  body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+  }
+
+  .container {
+    width: 380px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    overflow: hidden;
+    transition: 0.3s;
+  }
+
+  .tabs {
+    display: flex;
+    justify-content: space-around;
+    background: #f0f0f0;
+  }
+
+  .tab {
+    flex: 1;
+    text-align: center;
+    padding: 15px 0;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  .tab.active {
+    background: #667eea;
+    color: #fff;
+  }
+
+  form {
+    padding: 25px;
+    display: none;
+    animation: fade 0.5s ease;
+  }
+
+  form.active {
+    display: block;
+  }
+
+  @keyframes fade {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+  }
+
+  .input-group {
+    margin-bottom: 15px;
+    position: relative;
+  }
+
+  .input-group input {
+    width: 100%;
+    padding: 12px 40px 12px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    transition: 0.3s;
+  }
+
+  .input-group input:focus {
+    border-color: #667eea;
+    outline: none;
+  }
+
+  .input-group i {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #999;
+  }
+
+  button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    background: #667eea;
+    color: white;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+
+  button:hover {
+    background: #5a67d8;
+  }
+
+  .toggle {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 14px;
+  }
+
+  .toggle span {
+    color: #667eea;
+    cursor: pointer;
+    font-weight: 600;
+  }
+
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" id="login-tab">Login</div>
+      <div class="tab" id="signup-tab">Sign Up</div>
+    </div>
+
+    <form id="login-form" class="active">
+      <h2>Welcome Back 👋</h2>
+      <div class="input-group">
+        <input type="text" id="login-email" placeholder="Email" required>
+        <i>📧</i>
+      </div>
+      <div class="input-group">
+        <input type="password" id="login-password" placeholder="Password" required>
+        <i>🔒</i>
+      </div>
+      <button type="button" onclick="login()">Login</button>
+      <div class="toggle">
+        Don’t have an account? <span onclick="switchTab('signup')">Sign up</span>
+      </div>
+    </form>
+
+    <form id="signup-form">
+      <h2>Create Account ✨</h2>
+      <div class="input-group">
+        <input type="text" id="signup-name" placeholder="Full Name" required>
+        <i>👤</i>
+      </div>
+      <div class="input-group">
+        <input type="email" id="signup-email" placeholder="Email" required>
+        <i>📧</i>
+      </div>
+      <div class="input-group">
+        <input type="password" id="signup-password" placeholder="Password" required>
+        <i>🔒</i>
+      </div>
+      <button type="button" onclick="signup()">Sign Up</button>
+      <div class="toggle">
+        Already have an account? <span onclick="switchTab('login')">Login</span>
+      </div>
+    </form>
+  </div>
+
+<script>
+  const loginTab = document.getElementById("login-tab");
+  const signupTab = document.getElementById("signup-tab");
+  const loginForm = document.getElementById("login-form");
+  const signupForm = document.getElementById("signup-form");
+
+  loginTab.addEventListener("click", () => switchTab("login"));
+  signupTab.addEventListener("click", () => switchTab("signup"));
+
+  function switchTab(tab) {
+    if (tab === "login") {
+      loginTab.classList.add("active");
+      signupTab.classList.remove("active");
+      loginForm.classList.add("active");
+      signupForm.classList.remove("active");
+    } else {
+      signupTab.classList.add("active");
+      loginTab.classList.remove("active");
+      signupForm.classList.add("active");
+      loginForm.classList.remove("active");
+    }
+  }
+
+  function signup() {
+    const name = document.getElementById("signup-name").value;
+    const email = document.getElementById("signup-email").value;
+    const pass = document.getElementById("signup-password").value;
+
+    if (name && email && pass) {
+      localStorage.setItem("user", JSON.stringify({ name, email, pass }));
+      alert("✅ Sign up successful! You can login now.");
+      switchTab("login");
+    } else {
+      alert("⚠️ Please fill all fields!");
+    }
+  }
+
+  function login() {
+    const email = document.getElementById("login-email").value;
+    const pass = document.getElementById("login-password").value;
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+
+    if (storedUser && email === storedUser.email && pass === storedUser.pass) {
+      alert(`🎉 Welcome back, ${storedUser.name}!`);
+    } else {
+      alert("❌ Invalid email or password!");
+    }
+  }
+</script>
+</body>
+</html>
